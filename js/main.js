@@ -41,7 +41,7 @@ const generatePhotosData = () => {
       if (Math.random() > 0.5) {
         const randomMessageIndex2 = Math.floor(Math.random() * commentsText.length);
         if (randomMessageIndex2 !== randomMessageIndex1) {
-          message += ' ' + commentsText[randomMessageIndex2];
+          message += ` ${commentsText[randomMessageIndex2]}`; // Исправлено здесь
         }
       }
 
@@ -65,4 +65,7 @@ const generatePhotosData = () => {
   return photos;
 };
 
+// Чтобы избавиться от предупреждения о неиспользуемой переменной,
+// можно либо экспортировать данные, либо использовать их:
 const photosData = generatePhotosData();
+export { photosData };
