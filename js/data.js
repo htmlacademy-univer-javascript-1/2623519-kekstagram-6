@@ -27,3 +27,39 @@ const photoDescriptions = [
 ];
 
 export { commentsText, userNames, photoDescriptions };
+
+// data.js (временные данные для разработки)
+const createPhotos = () => [
+  {
+    id: 1,
+    url: 'photos/1.jpg',
+    description: 'Прекрасный закат на море',
+    likes: 150,
+    comments: [
+      { id: 1, text: 'Отличный кадр!' },
+      { id: 2, text: 'Какие цвета!' }
+    ]
+  },
+  {
+    id: 2,
+    url: 'photos/2.jpg',
+    description: 'Горный пейзаж',
+    likes: 89,
+    comments: [
+      { id: 1, text: 'Хочу туда!' }
+    ]
+  },
+  {
+    id: 3,
+    url: 'photos/3.jpg',
+    description: 'Уличное граффити',
+    likes: 203,
+    comments: [
+      { id: 1, text: 'Крутой арт' },
+      { id: 2, text: 'Где это?' },
+      { id: 3, text: 'Талантливо!' }
+    ]
+  }
+];
+
+export { createPhotos };
