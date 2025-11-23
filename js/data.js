@@ -1,69 +1,94 @@
+import { getRandomInteger, getRandomArrayElement } from './util.js';
+
 const commentsText = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
-  'Отличный кадр!',
-  'Очень красиво!',
-  'Хочу туда попасть!',
-  'Невероятные цвета!',
-  'Это просто восхитительно!',
-  'Какой замечательный вид!',
-  'Фотография просто супер!',
-  'Очень атмосферно!',
-  'Потрясающая работа!',
-  'Мне очень нравится!'
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-// data.js (временные данные для разработки)
-const createPhotos = () => [
-  {
-    id: 1,
-    url: 'photos/1.jpg',
-    description: 'Прекрасный закат на море',
-    likes: 150,
-    comments: [
-      { id: 1, text: 'Отличный кадр!' },
-      { id: 2, text: 'Какие цвета!' },
-      { id: 3, text: 'Мечтаю там побывать!' },
-      { id: 4, text: 'Невероятно красиво!' },
-      { id: 5, text: 'Это просто восхитительно!' },
-      { id: 6, text: 'Хочу туда попасть!' },
-      { id: 7, text: 'Фотография просто супер!' },
-      { id: 8, text: 'Очень атмосферно!' },
-      { id: 9, text: 'Потрясающая работа!' },
-      { id: 10, text: 'Мне очень нравится!' }
-    ]
-  },
-  {
-    id: 2,
-    url: 'photos/2.jpg',
-    description: 'Горный пейзаж',
-    likes: 89,
-    comments: [
-      { id: 1, text: 'Хочу туда!' },
-      { id: 2, text: 'Великолепные горы' },
-      { id: 3, text: 'Какой замечательный вид!' },
-      { id: 4, text: 'Невероятные цвета!' }
-    ]
-  },
-  {
-    id: 3,
-    url: 'photos/3.jpg',
-    description: 'Уличное граффити',
-    likes: 203,
-    comments: [
-      { id: 1, text: 'Крутой арт' },
-      { id: 2, text: 'Где это?' },
-      { id: 3, text: 'Талантливо!' },
-      { id: 4, text: 'Очень креативно' },
-      { id: 5, text: 'Интересная работа' },
-      { id: 6, text: 'Мне нравится этот стиль' },
-      { id: 7, text: 'Отличное граффити' }
-    ]
+const userNames = [
+  'Артём', 'Мария', 'Дмитрий', 'Анна', 'Сергей',
+  'Елена', 'Алексей', 'Ольга', 'Иван', 'Наталья',
+  'Павел', 'Юлия', 'Михаил', 'Александр', 'Екатерина',
+  'Владимир', 'Светлана', 'Николай', 'Татьяна', 'Андрей'
+];
+
+const photoDescriptions = [
+  'Прекрасный закат на море',
+  'Горный пейзаж в утреннем тумане',
+  'Улочки старого города',
+  'Кофе в уютном кафе',
+  'Прогулка по осеннему парку',
+  'Архитектура современного мегаполиса',
+  'Момент из путешествия',
+  'Уютный домашний вечер',
+  'Природа в её лучшем проявлении',
+  'Городские огни ночью',
+  'Летний день на пляже',
+  'Зимняя сказка в лесу',
+  'Вкусный ужин в ресторане',
+  'Спортивные достижения',
+  'Творческий процесс',
+  'Встреча с друзьями',
+  'Романтический вечер',
+  'Приключения на природе',
+  'Рабочий момент',
+  'Отдых на даче',
+  'Любимое хобби',
+  'Семейные ценности',
+  'Экзотические места',
+  'Исторические памятники',
+  'Современное искусство'
+];
+
+const generateComment = (id) => {
+  let message = getRandomArrayElement(commentsText);
+
+  if (Math.random() > 0.5) {
+    const secondMessage = getRandomArrayElement(commentsText);
+    if (secondMessage !== message) {
+      message += ` ${secondMessage}`;
+    }
   }
-];
 
-export { commentsText, createPhotos };
+  return {
+    id: id,
+    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+    message: message,
+    name: getRandomArrayElement(userNames)
+  };
+};
+
+const generateComments = (count) => {
+  const comments = [];
+  const commentId = getRandomInteger(1, 1000);
+
+  for (let i = 0; i < count; i++) {
+    comments.push(generateComment(commentId + i));
+  }
+
+  return comments;
+};
+
+const generatePhoto = (id) => ({
+  id: id,
+  url: `photos/${id}.jpg`,
+  description: getRandomArrayElement(photoDescriptions),
+  likes: getRandomInteger(15, 200),
+  comments: generateComments(getRandomInteger(0, 30))
+});
+
+const generatePhotosData = () => {
+  const photos = [];
+
+  for (let i = 1; i <= 25; i++) {
+    photos.push(generatePhoto(i));
+  }
+
+  return photos;
+};
+
+export { commentsText, userNames, photoDescriptions, generatePhotosData };
