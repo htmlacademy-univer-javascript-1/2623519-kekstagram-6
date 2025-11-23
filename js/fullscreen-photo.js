@@ -1,4 +1,4 @@
-import { createPhotos } from './data.js';
+import { generatePhotosData } from './data.js';
 
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
@@ -20,14 +20,14 @@ const createCommentElement = (comment) => {
 
   const avatar = document.createElement('img');
   avatar.classList.add('social__picture');
-  avatar.src = `img/avatar-${Math.floor(Math.random() * 6) + 1}.svg`;
-  avatar.alt = 'Аватар комментатора';
+  avatar.src = comment.avatar;
+  avatar.alt = comment.name;
   avatar.width = 35;
   avatar.height = 35;
 
   const text = document.createElement('p');
   text.classList.add('social__text');
-  text.textContent = comment.text;
+  text.textContent = comment.message;
 
   commentElement.appendChild(avatar);
   commentElement.appendChild(text);
@@ -61,7 +61,7 @@ const onCommentsLoaderClick = () => {
 };
 
 const openFullscreenPhoto = (photoId) => {
-  const photos = createPhotos();
+  const photos = generatePhotosData();
   const photo = photos.find((item) => item.id === photoId);
 
   if (!photo) {

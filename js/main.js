@@ -1,16 +1,8 @@
-//import { generatePhotosData } from './util.js';
-
-//const photosData = generatePhotosData();
-//export { photosData };
-
-// main.js
-//import { renderThumbnails } from './thumbnails.js';
-
-// Инициализация приложения
-//renderThumbnails();
-
 import { renderThumbnails } from './thumbnails.js';
 
+// Инициализация приложения
 document.addEventListener('DOMContentLoaded', () => {
   renderThumbnails();
+  // eslint-disable-next-line no-console
+  console.log('Кекстаграм инициализирован!');
 });
