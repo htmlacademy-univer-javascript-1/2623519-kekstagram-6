@@ -1,10 +1,9 @@
-import { createPhotos } from './data.js';
+import { generatePhotosData } from './data.js';
 import { openFullscreenPhoto } from './fullscreen-photo.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-// Создание DOM-элемента на основе данных фотографии
 const createThumbnail = (photo) => {
   const thumbnail = pictureTemplate.cloneNode(true);
 
@@ -15,7 +14,6 @@ const createThumbnail = (photo) => {
   thumbnail.querySelector('.picture__likes').textContent = photo.likes;
   thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
 
-  // Добавляем обработчик клика для открытия полноразмерного просмотра
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
     openFullscreenPhoto(photo.id);
@@ -24,9 +22,8 @@ const createThumbnail = (photo) => {
   return thumbnail;
 };
 
-// Отрисовка миниатюр
 const renderThumbnails = () => {
-  const photos = createPhotos();
+  const photos = generatePhotosData();
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
@@ -34,6 +31,7 @@ const renderThumbnails = () => {
     fragment.appendChild(thumbnail);
   });
 
+  picturesContainer.innerHTML = '';
   picturesContainer.appendChild(fragment);
 };
 
