@@ -26,8 +26,6 @@ const photoDescriptions = [
   'Городские огни ночью'
 ];
 
-export { commentsText, userNames, photoDescriptions };
-
 // data.js (временные данные для разработки)
 const createPhotos = () => [
   {
@@ -37,7 +35,8 @@ const createPhotos = () => [
     likes: 150,
     comments: [
       { id: 1, text: 'Отличный кадр!' },
-      { id: 2, text: 'Какие цвета!' }
+      { id: 2, text: 'Какие цвета!' },
+      { id: 3, text: 'Мечтаю там побывать!' }
     ]
   },
   {
@@ -46,7 +45,8 @@ const createPhotos = () => [
     description: 'Горный пейзаж',
     likes: 89,
     comments: [
-      { id: 1, text: 'Хочу туда!' }
+      { id: 1, text: 'Хочу туда!' },
+      { id: 2, text: 'Великолепные горы' }
     ]
   },
   {
@@ -57,9 +57,31 @@ const createPhotos = () => [
     comments: [
       { id: 1, text: 'Крутой арт' },
       { id: 2, text: 'Где это?' },
-      { id: 3, text: 'Талантливо!' }
+      { id: 3, text: 'Талантливо!' },
+      { id: 4, text: 'Очень креативно' }
+    ]
+  },
+  {
+    id: 4,
+    url: 'photos/4.jpg',
+    description: 'Кофе в уютном кафе',
+    likes: 76,
+    comments: [
+      { id: 1, text: 'Выглядит вкусно!' },
+      { id: 2, text: 'Как называется кафе?' }
+    ]
+  },
+  {
+    id: 5,
+    url: 'photos/5.jpg',
+    description: 'Прогулка по осеннему парку',
+    likes: 134,
+    comments: [
+      { id: 1, text: 'Осень - мое любимое время года' },
+      { id: 2, text: 'Такая атмосферная фотография' },
+      { id: 3, text: 'Листья просто шикарны!' }
     ]
   }
 ];
 
-export { createPhotos };
+export { commentsText, userNames, photoDescriptions, createPhotos };
