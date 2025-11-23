@@ -1,4 +1,3 @@
-import { generatePhotosData } from './data.js';
 import { openFullscreenPhoto } from './fullscreen-photo.js';
 
 const picturesContainer = document.querySelector('.pictures');
@@ -16,14 +15,13 @@ const createThumbnail = (photo) => {
 
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
-    openFullscreenPhoto(photo.id);
+    openFullscreenPhoto(photo);
   });
 
   return thumbnail;
 };
 
-const renderThumbnails = () => {
-  const photos = generatePhotosData();
+const renderThumbnails = (photos) => {
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {

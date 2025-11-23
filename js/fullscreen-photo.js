@@ -1,5 +1,3 @@
-import { generatePhotosData } from './data.js';
-
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
@@ -60,14 +58,7 @@ const onCommentsLoaderClick = () => {
   renderComments();
 };
 
-const openFullscreenPhoto = (photoId) => {
-  const photos = generatePhotosData();
-  const photo = photos.find((item) => item.id === photoId);
-
-  if (!photo) {
-    return;
-  }
-
+const openFullscreenPhoto = (photo) => {
   currentComments = photo.comments;
   commentsShown = 0;
   socialComments.innerHTML = '';
@@ -95,9 +86,7 @@ const closeFullscreenPhoto = () => {
   commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 };
 
-cancelButton.addEventListener('click', () => {
-  closeFullscreenPhoto();
-});
+cancelButton.addEventListener('click', closeFullscreenPhoto);
 
 document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
