@@ -8,3 +8,4 @@ import { renderThumbnails } from './thumbnails.js';
 
 // Инициализация приложения
 renderThumbnails();
+
