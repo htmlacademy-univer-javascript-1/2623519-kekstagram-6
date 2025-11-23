@@ -1,5 +1,6 @@
-import Pristine from 'pristinejs';
-import 'pristinejs/dist/pristine.css';
+/* eslint-disable no-console */
+// form-validation.js - используем глобальный Pristine
+const Pristine = window.Pristine;
 
 const uploadForm = document.querySelector('.img-upload__form');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
@@ -37,18 +38,27 @@ const validateComment = (value) => value.length <= 140;
 // Сообщения об ошибках
 const getHashtagErrorMessage = () => {
   const hashtags = hashtagInput.value.trim().toLowerCase().split(/\s+/);
+
   if (hashtags.length > 5) {
     return 'Не более 5 хэш-тегов';
   }
+
   const uniqueHashtags = new Set(hashtags);
   if (uniqueHashtags.size !== hashtags.length) {
     return 'Хэш-теги не должны повторяться';
   }
+
   return 'Некорректный хэш-тег. Формат: #тег (только буквы и цифры)';
 };
 
 // Инициализация валидации
 const initValidation = () => {
+  // Проверяем, что Pristine доступен
+  if (typeof Pristine === 'undefined') {
+    console.error('Pristine не загружен. Проверьте подключение в HTML.');
+    return;
+  }
+
   pristine = new Pristine(uploadForm, {
     classTo: 'img-upload__field-wrapper',
     errorClass: 'img-upload__field-wrapper--error',
@@ -61,11 +71,19 @@ const initValidation = () => {
 };
 
 // Валидация формы
-const validateForm = () => pristine.validate();
+const validateForm = () => {
+  if (!pristine) {
+    console.error('Pristine не инициализирован');
+    return false;
+  }
+  return pristine.validate();
+};
 
-// Сброс валидации
-const resetForm = () => {
-  pristine.reset();
+// Сброс валидации - ИСПРАВЛЕНО ИМЯ ФУНКЦИИ
+const resetValidation = () => {
+  if (pristine) {
+    pristine.reset();
+  }
 };
 
 // Инициализация
@@ -73,4 +91,5 @@ const initFormValidation = () => {
   initValidation();
 };
 
-export { initFormValidation, validateForm, resetForm };
+// ЭКСПОРТИРУЕМ resetValidation вместо resetForm
+export { initFormValidation, validateForm, resetValidation };

@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 import { showSuccessMessage, showErrorMessage } from './messages.js';
-import { validateForm, resetForm } from './form-validation.js';
+import { validateForm, resetValidation } from './form-validation.js'; // ИСПРАВЛЕНО ИМЯ
 import { initScale, resetScale } from './scale.js';
 import { initEffects, resetEffects } from './effects.js';
 
@@ -27,6 +26,7 @@ const closeUploadForm = () => {
   uploadForm.reset();
   resetScale();
   resetEffects();
+  resetValidation(); // ИСПРАВЛЕНО ИМЯ
 };
 
 // Обработчик выбора файла
@@ -92,7 +92,6 @@ const initUploadForm = () => {
   uploadInput.addEventListener('change', onFileInputChange);
   uploadCancel.addEventListener('click', closeUploadForm);
   uploadForm.addEventListener('submit', onFormSubmit);
-
   initScale();
   initEffects();
 };

@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
-import noUiSlider from 'noUiSlider';
-import 'noUiSlider/dist/nouislider.css';
-
+/* eslint-disable no-console */
+// effects.js - используем глобальный noUiSlider
 const effectsList = document.querySelector('.effects__list');
 const effectLevel = document.querySelector('.img-upload__effect-level');
 const effectLevelValue = document.querySelector('.effect-level__value');
@@ -21,11 +20,31 @@ let currentEffect = 'none';
 
 // Инициализация слайдера
 const initSlider = () => {
+  // Проверяем, что noUiSlider доступен глобально
+  if (typeof noUiSlider === 'undefined') {
+    console.error('noUiSlider не загружен. Проверьте подключение в HTML.');
+    return;
+  }
+
   noUiSlider.create(effectLevelSlider, {
-    range: { min: 0, max: 100 },
+    range: {
+      min: 0,
+      max: 100
+    },
     start: 100,
     step: 1,
-    connect: 'lower'
+    connect: 'lower',
+    format: {
+      to: function (value) {
+        if (Number.isInteger(value)) {
+          return value.toFixed(0);
+        }
+        return value.toFixed(1);
+      },
+      from: function (value) {
+        return parseFloat(value);
+      }
+    }
   });
 
   effectLevelSlider.noUiSlider.on('update', () => {
@@ -54,10 +73,14 @@ const updateSlider = (effect) => {
   }
 
   effectLevel.classList.remove('hidden');
+  const effectConfig = EFFECTS[effect];
   effectLevelSlider.noUiSlider.updateOptions({
-    range: { min: EFFECTS[effect].min, max: EFFECTS[effect].max },
-    start: EFFECTS[effect].max,
-    step: EFFECTS[effect].step
+    range: {
+      min: effectConfig.min,
+      max: effectConfig.max
+    },
+    start: effectConfig.max,
+    step: effectConfig.step
   });
 };
 
@@ -66,20 +89,32 @@ const onEffectChange = (evt) => {
   if (evt.target.name === 'effect') {
     currentEffect = evt.target.value;
     updateSlider(currentEffect);
-    applyEffect(EFFECTS[currentEffect].max);
+    if (currentEffect === 'none') {
+      uploadPreview.style.filter = 'none';
+    } else {
+      applyEffect(EFFECTS[currentEffect].max);
+    }
   }
 };
 
 // Сброс эффектов
 const resetEffects = () => {
   currentEffect = 'none';
-  effectsList.querySelector('#effect-none').checked = true;
+  const noneEffect = effectsList.querySelector('#effect-none');
+  if (noneEffect) {
+    noneEffect.checked = true;
+  }
   updateSlider('none');
-  applyEffect(0);
+  uploadPreview.style.filter = 'none';
 };
 
 // Инициализация
 const initEffects = () => {
+  // Проверяем, существует ли слайдер
+  if (!effectLevelSlider) {
+    console.error('Слайдер эффектов не найден');
+    return;
+  }
   initSlider();
   effectsList.addEventListener('change', onEffectChange);
   resetEffects();
