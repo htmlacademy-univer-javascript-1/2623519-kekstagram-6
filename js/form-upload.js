@@ -1,8 +1,12 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
+/* eslint-disable no-console */
+// form-upload.js
 import { showSuccessMessage, showErrorMessage } from './messages.js';
-import { validateForm, resetValidation } from './form-validation.js'; // ИСПРАВЛЕНО ИМЯ
+import { validateForm, resetValidation } from './form-validation.js';
 import { initScale, resetScale } from './scale.js';
 import { initEffects, resetEffects } from './effects.js';
+import { sendPhoto } from './api.js'; // Импортируем функцию sendPhoto
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadInput = document.querySelector('.img-upload__input');
@@ -10,6 +14,34 @@ const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadCancel = document.querySelector('.img-upload__cancel');
 const uploadPreview = uploadOverlay.querySelector('.img-upload__preview img');
 const effectsPreviews = uploadOverlay.querySelectorAll('.effects__preview');
+const submitButton = uploadForm.querySelector('.img-upload__submit');
+const formResetButton = uploadForm.querySelector('.img-upload__cancel');
+
+// Состояние кнопки отправки
+const setSubmitButtonState = (isSubmitting) => {
+  submitButton.disabled = isSubmitting;
+  submitButton.textContent = isSubmitting ? 'Публикую...' : 'Опубликовать';
+};
+
+// Сброс формы к исходному состоянию
+const resetForm = () => {
+  // Сбрасываем форму
+  uploadForm.reset();
+
+  // Сбрасываем предпросмотр
+  uploadPreview.src = 'img/upload-default-image.jpg';
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+
+  // Сбрасываем дополнительные модули
+  resetScale();
+  resetEffects();
+  resetValidation();
+
+  // Очищаем инпут файла
+  uploadInput.value = '';
+};
 
 // Открытие формы редактирования
 const openUploadForm = () => {
@@ -23,16 +55,13 @@ const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-  uploadForm.reset();
-  resetScale();
-  resetEffects();
-  resetValidation(); // ИСПРАВЛЕНО ИМЯ
+  resetForm(); // Полный сброс формы
 };
 
 // Обработчик выбора файла
 const onFileInputChange = (evt) => {
   const file = evt.target.files[0];
-  if (file) {
+  if (file && file.type.startsWith('image/')) {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       uploadPreview.src = reader.result;
@@ -42,6 +71,9 @@ const onFileInputChange = (evt) => {
       openUploadForm();
     });
     reader.readAsDataURL(file);
+  } else {
+    // Показываем ошибку, если файл не изображение
+    showErrorMessage('Пожалуйста, выберите файл изображения');
   }
 };
 
@@ -49,8 +81,9 @@ const onFileInputChange = (evt) => {
 const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape') {
     const activeElement = document.activeElement;
-    if (!activeElement.classList.contains('text__hashtags') &&
-        !activeElement.classList.contains('text__description')) {
+    const isInputFocused = activeElement.classList.contains('text__hashtags') ||
+                          activeElement.classList.contains('text__description');
+    if (!isInputFocused) {
       evt.preventDefault();
       closeUploadForm();
     }
@@ -60,37 +93,61 @@ const onDocumentKeydown = (evt) => {
 // Отправка формы
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
+
+  // Валидация формы
   if (!validateForm()) {
     return;
   }
 
-  const submitButton = uploadForm.querySelector('.img-upload__submit');
-  submitButton.disabled = true;
+  // Блокируем кнопку отправки
+  setSubmitButtonState(true);
 
   try {
+    // Собираем данные формы
     const formData = new FormData(uploadForm);
-    const response = await fetch('https://29.javascript.htmlacademy.pro/kekstagram', {
-      method: 'POST',
-      body: formData,
-    });
 
-    if (!response.ok) {
-      throw new Error('Ошибка загрузки');
-    }
+    // Отправляем данные на сервер
+    await sendPhoto(formData);
 
+    // Показываем сообщение об успехе
     showSuccessMessage();
+
+    // Закрываем форму
     closeUploadForm();
+
   } catch (error) {
-    showErrorMessage();
+    console.error('Ошибка отправки формы:', error);
+
+    // Показываем соответствующее сообщение об ошибке
+    if (error.response && error.response.status === 400) {
+      showErrorMessage('Ошибка валидации данных. Проверьте правильность заполнения формы.');
+    } else if (error.response && error.response.status === 403) {
+      showErrorMessage('Доступ запрещён. Возможно, проблема с авторизацией.');
+    } else if (error.response && error.response.status === 404) {
+      showErrorMessage('Сервер не найден. Проверьте подключение к интернету.');
+    } else if (error.response && error.response.status >= 500) {
+      showErrorMessage('Ошибка сервера. Пожалуйста, попробуйте позже.');
+    } else if (error.message === 'Failed to fetch') {
+      showErrorMessage('Проблема с подключением к интернету. Проверьте сеть.');
+    } else {
+      showErrorMessage('Произошла ошибка при отправке данных. Попробуйте ещё раз.');
+    }
   } finally {
-    submitButton.disabled = false;
+    // Разблокируем кнопку отправки
+    setSubmitButtonState(false);
   }
+};
+
+// Обработчик сброса формы (кнопка "Отмена")
+const onFormReset = (evt) => {
+  evt.preventDefault();
+  closeUploadForm();
 };
 
 // Инициализация модуля
 const initUploadForm = () => {
   uploadInput.addEventListener('change', onFileInputChange);
-  uploadCancel.addEventListener('click', closeUploadForm);
+  uploadCancel.addEventListener('click', onFormReset);
   uploadForm.addEventListener('submit', onFormSubmit);
   initScale();
   initEffects();
