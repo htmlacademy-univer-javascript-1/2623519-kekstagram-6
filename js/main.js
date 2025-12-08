@@ -152,4 +152,3 @@ const initApp = () => {
 import { showErrorMessage } from './messages.js';
 
 document.addEventListener('DOMContentLoaded', initApp);
-
