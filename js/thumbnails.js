@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 // thumbnails.js - теперь получает реальные данные с сервера
 import { openFullscreenPhoto } from './fullscreen-photo.js';
 
@@ -34,7 +35,9 @@ const renderThumbnails = (photos) => {
       color: #999;
       font-size: 18px;
     `;
-    picturesContainer.innerHTML = '';
+    // Удаляем только миниатюры, оставляя другие элементы
+    const existingThumbnails = picturesContainer.querySelectorAll('.picture');
+    existingThumbnails.forEach((thumbnail) => thumbnail.remove());
     picturesContainer.appendChild(emptyMessage);
     return;
   }
@@ -46,7 +49,10 @@ const renderThumbnails = (photos) => {
     fragment.appendChild(thumbnail);
   });
 
-  picturesContainer.innerHTML = '';
+  // Удаляем только миниатюры, оставляя другие элементы
+  const existingThumbnails = picturesContainer.querySelectorAll('.picture');
+  existingThumbnails.forEach((thumbnail) => thumbnail.remove());
+  // Добавляем новые миниатюры
   picturesContainer.appendChild(fragment);
 };
 

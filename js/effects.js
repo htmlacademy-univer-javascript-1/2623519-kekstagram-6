@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-console */
 // effects.js - используем глобальный noUiSlider
@@ -120,4 +121,9 @@ const initEffects = () => {
   resetEffects();
 };
 
-export { initEffects, resetEffects };
+// Функция обновления слайдера (для внешнего вызова)
+const updateEffectSlider = () => {
+  updateSlider(currentEffect);
+};
+
+export { initEffects, resetEffects, updateEffectSlider };

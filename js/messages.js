@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 // messages.js - улучшенные сообщения
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -47,4 +48,13 @@ const showErrorMessage = (customText = 'Ошибка загрузки данны
   showMessage(errorTemplate, customText);
 };
 
-export { showSuccessMessage, showErrorMessage };
+// Глобальная функция для скрытия сообщения (если нужно вызвать из других файлов)
+const hideMessage = () => {
+  const message = document.querySelector('.success, .error');
+  if (message) {
+    message.remove();
+  }
+};
+
+
+export { showSuccessMessage, showErrorMessage, hideMessage };

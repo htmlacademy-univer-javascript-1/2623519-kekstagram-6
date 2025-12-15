@@ -92,4 +92,5 @@ const initFormValidation = () => {
 };
 
 // ЭКСПОРТИРУЕМ resetValidation вместо resetForm
-export { initFormValidation, validateForm, resetValidation };
+export { initFormValidation, validateForm, resetValidation as resetForm, resetValidation };
+

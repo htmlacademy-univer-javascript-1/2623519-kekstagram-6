@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const scaleControl = document.querySelector('.scale__control--value');
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleBigger = document.querySelector('.scale__control--bigger');
@@ -39,4 +40,9 @@ const initScale = () => {
   resetScale();
 };
 
-export { initScale, resetScale };
+// Функция масштабирования изображения (для внешнего вызова)
+const scaleImage = (value) => {
+  updateScale(value);
+};
+
+export { initScale, resetScale, scaleImage };
